@@ -58,7 +58,7 @@
   select{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:5px 8px;font-size:13px}
   button{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px}
   button:hover{background:#2a2a26}
-  #cursor{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#b8d725;min-height:1.2em;margin-bottom:6px}
+  .rd{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#b8d725;min-height:1.2em;margin:-4px 0 8px;word-break:break-word}
   #hint{font-size:12px;color:#777;margin-bottom:12px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
   .panel{background:#0c0c0a;border:1px solid #202020;border-radius:10px;padding:10px}
@@ -299,21 +299,23 @@
   </div>
   </div>
   </div>
-  <div id="cursor"></div>
   <div id="hint">Setas ou PageUp/PageDown trocam a fatia da vista ativa · Scroll do mouse troca a fatia · Ctrl + scroll (ou +/−) dá zoom · Arrastar move a imagem quando há zoom · Duplo clique amplia ou reduz a vista</div>
   <div class="grid">
     <div class="panel" data-view="A">
       <h2>Axial</h2>
+      <div class="rd" id="rdA"></div>
       <div class="canvasWrap"><canvas id="cA"></canvas></div>
       <div class="slicebar"><span>Fatia</span><input type="range" id="sA" min="0" max="0" value="0"><span id="nA"></span><button data-png="A">Salvar PNG</button></div>
     </div>
     <div class="panel" data-view="C">
       <h2>Coronal</h2>
+      <div class="rd" id="rdC"></div>
       <div class="canvasWrap"><canvas id="cC"></canvas></div>
       <div class="slicebar"><span>Fatia</span><input type="range" id="sC" min="0" max="0" value="0"><span id="nC"></span><button data-png="C">Salvar PNG</button></div>
     </div>
     <div class="panel" data-view="S">
       <h2>Sagital</h2>
+      <div class="rd" id="rdS"></div>
       <div class="canvasWrap"><canvas id="cS"></canvas></div>
       <div class="slicebar"><span>Fatia</span><input type="range" id="sS" min="0" max="0" value="0"><span id="nS"></span><button data-png="S">Salvar PNG</button></div>
     </div>
@@ -322,7 +324,7 @@
 <script>
 const $ = id => document.getElementById(id);
 const fileIn = $('file'), maskIn = $('maskFile'), drop = $('drop'), statusEl = $('status');
-const infoEl = $('info'), maskInfoEl = $('maskInfo'), cursorEl = $('cursor');
+const infoEl = $('info'), maskInfoEl = $('maskInfo'), rdEl = {A: $('rdA'), C: $('rdC'), S: $('rdS')};
 const levelEl = $('level'), widthEl = $('width'), flipEl = $('flipH'), cmapEl = $('cmap'), physEl = $('physAsp');
 const showMaskEl = $('showMask'), opacEl = $('opac'), outlineEl = $('outline'), thrEl = $('thr');
 const canv = {A: $('cA'), C: $('cC'), S: $('cS')};
@@ -364,7 +366,7 @@ const maskLbl = $('maskLbl'), segSwitchEl = $('segSwitch');
 const mimicsEl = $('mimics');
 const limitesEl = $('limites');
 // Cartões de apoio ficam na tela principal, acima dos cortes
-document.querySelector('.grid').before(limitesEl, mimicsEl, $('contra'));
+document.querySelector('.grid').before(limitesEl, mimicsEl, $('contra'), $('hint'));
 let segPresente = false;   // interruptor: o modelo (simulado) segmentou hemorragia
 // Estado da segmentação: 'pronta' | 'processando' | 'indisponivel'
 let segState = {estado: 'indisponivel', motivo: 'nenhuma máscara recebida', fonte: '-'};   // fatias axiais com segmentação e total de voxels acima do limiar       // telas internas com a resolução nativa de cada vista
@@ -867,7 +869,7 @@ for (const k of ['A', 'C', 'S']) {
       const mv = M.vol[x + V.nx * (y + V.ny * z)];
       txt += ' · segmentação:' + (mv > +thrEl.value ? 'sim (rótulo ' + (Math.round(mv) || 1) + ')' : 'não');
     }
-    cursorEl.textContent = txt;
+    rdEl[k].textContent = txt;
   });
 
   // Arrastar move a imagem (com zoom) ou, sem arrastar, clique define a posição
