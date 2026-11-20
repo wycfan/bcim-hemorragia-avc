@@ -13,7 +13,33 @@
   header label{font-size:13px;display:flex;align-items:center;gap:6px}
   header label[hidden]{display:none}
   .aviso{font-size:12px;color:#f0b429;margin-left:auto}
-  main{padding:14px 18px}
+  main{padding:14px 18px;max-width:1400px;margin:0 auto}
+  /* Botão para voltar ao topo: aparece depois da primeira janela, fica translúcido parado e some no canto em telas estreitas */
+  /* Painel de controles: ao lado do conteúdo em telas largas; fixo e compacto no topo em telas estreitas */
+  .cmore{display:none;margin-left:auto;font-size:12px;padding:4px 10px}
+  @media (min-width:1100px){
+    main{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:18px;align-items:start}
+    main > *:not(.ctl-row){grid-column:2}
+    .ctl-row{grid-column:1;grid-row:1 / span 60;position:sticky;top:12px;flex-direction:column;flex-wrap:nowrap;margin-bottom:0;max-height:calc(100vh - 24px);overflow:auto}
+    .ctl-row .ctl{flex:none}
+  }
+  @media (max-width:1099px){
+    .ctl-row.compact{position:sticky;top:0;z-index:15;background:#050505;padding:6px 0;margin-bottom:8px;gap:8px;align-items:stretch}
+    .ctl-row.compact .ctl{flex:1 1 auto;padding:4px 10px;display:flex;align-items:center;gap:10px}
+    .ctl-row.compact .ctl-tit{font-size:0;margin:0;white-space:nowrap}
+    .ctl-row.compact .ctl-tit::before{content:attr(data-short);font-size:11px;letter-spacing:.05em;color:#888}
+    .ctl-row.compact .ctl .controls{margin-bottom:0;gap:6px 12px}
+    .ctl-row.compact .adv{display:none}
+    .ctl-row.compact.more label.adv{display:flex}
+    .ctl-row.compact.more button.adv{display:inline-block}
+    .ctl-row.compact .cmore{display:inline-block}
+  }
+  #topBtn{position:fixed;bottom:16px;left:12px;z-index:20;width:40px;height:40px;border-radius:50%;padding:0;font-size:18px;line-height:1;color:#b8d725;background:#141410;border:1px solid #2c2c28;opacity:0;pointer-events:none;transition:opacity .3s}
+  #topBtn.show{opacity:1;pointer-events:auto}
+  #topBtn.show.idle{opacity:.35}
+  #topBtn.show:hover{opacity:1}
+  @media (min-width:1100px){ #topBtn{left:auto;right:12px} }   /* em telas largas, canto direito (a esquerda tem o painel) */
+  @media (min-width:1530px){ #topBtn{left:auto;right:calc(50vw - 752px)} }   /* margem lateral direita do conteúdo centralizado */
   #drop{border:1px dashed #3a3a36;border-radius:6px;padding:4px 10px;font-size:12px;text-align:center;color:#b0b0b0;white-space:nowrap}
   #drop.over{border-color:#b8d725;color:#fff}
   #status{color:#ff7b7b;font-size:13px;min-height:1.2em;margin-bottom:6px}
@@ -243,14 +269,14 @@
   <div id="status"></div>
   <div class="ctl-row">
   <div class="ctl">
-  <span class="ctl-tit">Imagem do exame</span>
+  <span class="ctl-tit" data-short="Exame">Imagem do exame</span>
   <div class="controls">
     <button data-p="cer">Cérebro</button>
     <button data-p="pm">Partes moles</button>
     <button data-p="osso">Osso</button>
-    <label>Nível (L) <input type="range" id="level" min="-1000" max="3000" value="40"> <span id="lv">40</span></label>
-    <label>Janela (W) <input type="range" id="width" min="1" max="4000" value="80"> <span id="wv">80</span></label>
-    <label>Mapa de cores
+    <label class="adv">Nível (L) <input type="range" id="level" min="-1000" max="3000" value="40"> <span id="lv">40</span></label>
+    <label class="adv">Janela (W) <input type="range" id="width" min="1" max="4000" value="80"> <span id="wv">80</span></label>
+    <label class="adv">Mapa de cores
       <select id="cmap">
         <option value="gray">Cinza</option>
         <option value="inv">Cinza invertido</option>
@@ -258,16 +284,17 @@
         <option value="jet">Arco-íris</option>
       </select>
     </label>
-    <label><input type="checkbox" id="flipH"> Espelhar horizontalmente</label>
-    <label><input type="checkbox" id="physAsp" checked> Proporção física <span class="tip" tabindex="0" data-tip="Mantém as proporções reais do exame. Como as fatias são mais grossas que os pixels, os cortes de frente e de lado ficam alongados na vertical. Desligue para ver quadrados perfeitos, mas as distâncias verticais deixam de ser exatas.">?</span></label>
-    <button id="resetZoom">Resetar zoom</button>
+    <label class="adv"><input type="checkbox" id="flipH"> Espelhar horizontalmente</label>
+    <label class="adv"><input type="checkbox" id="physAsp" checked> Proporção física <span class="tip" tabindex="0" data-tip="Mantém as proporções reais do exame. Como as fatias são mais grossas que os pixels, os cortes de frente e de lado ficam alongados na vertical. Desligue para ver quadrados perfeitos, mas as distâncias verticais deixam de ser exatas.">?</span></label>
+    <button id="resetZoom" class="adv">Resetar zoom</button>
   </div>
   </div>
+  <button id="ctlMore" class="cmore">Mais ▾</button>
   <div class="ctl mask">
-  <span class="ctl-tit">Segmentação gerada pela IA</span>
+  <span class="ctl-tit" data-short="IA">Segmentação de hemorragia (gerada pela IA)</span>
   <div class="controls">
     <label><input type="checkbox" id="showMask"> Mostrar máscara <span class="tip" tabindex="0" data-tip="Desenha por cima da imagem a área marcada no arquivo de máscara. Segmentar significa delimitar, pixel a pixel, uma estrutura da imagem, como uma região de sangramento, separando-a do restante. A máscara é o registro desse contorno. A página apenas mostra o que o arquivo contém, sem qualquer diagnóstico.">?</span></label>
-    <label>Opacidade <input type="range" id="opac" min="0" max="100" value="40"> </label>
+    <label class="adv">Opacidade <input type="range" id="opac" min="0" max="100" value="40"> </label>
     <label><input type="checkbox" id="outline"> Só contorno <span class="tip" tabindex="0" data-tip="Mostra apenas a borda da área segmentada, em vez de pintá-la por inteiro. Ajuda a ver o tecido por baixo da região marcada.">?</span></label>
   </div>
   </div>
@@ -979,6 +1006,39 @@ $('nextSeg').addEventListener('click', () => jumpSeg(1));
 
 window.addEventListener('resize', redrawAll);
 setActive('A');
+// Botão de voltar ao topo
+const topBtn = document.createElement('button');
+topBtn.id = 'topBtn';
+topBtn.textContent = '↑';
+topBtn.title = 'Voltar ao topo';
+topBtn.setAttribute('aria-label', 'Voltar ao topo');
+document.body.appendChild(topBtn);
+let topIdle;
+function topUpdate() {
+  const a = panels.A;
+  topBtn.classList.toggle('show', window.scrollY >= a.offsetHeight);
+  topBtn.classList.remove('idle');
+  clearTimeout(topIdle);
+  topIdle = setTimeout(() => topBtn.classList.add('idle'), 1000);
+}
+window.addEventListener('scroll', topUpdate, {passive: true});
+
+// Painel de controles: compacto e fixo no topo ao rolar até as janelas (telas estreitas)
+const ctlRow = document.querySelector('.ctl-row');
+const ctlMore = $('ctlMore');
+function ctlUpdate() {
+  const compact = window.innerWidth < 1100 && window.scrollY > panels.A.offsetTop - 80;
+  ctlRow.classList.toggle('compact', compact);
+  if (!compact) { ctlRow.classList.remove('more'); ctlMore.textContent = 'Mais ▾'; }
+}
+ctlMore.addEventListener('click', () => {
+  const on = ctlRow.classList.toggle('more');
+  ctlMore.textContent = on ? 'Menos ▴' : 'Mais ▾';
+});
+window.addEventListener('scroll', ctlUpdate, {passive: true});
+window.addEventListener('resize', ctlUpdate);
+ctlUpdate();
+topBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
 </script>
 </body>
 </html>
