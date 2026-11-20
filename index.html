@@ -6,53 +6,54 @@
 <title>Visualizador NIfTI 2D - TC de crânio</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#121212;color:#e6e6e6}
-  header{padding:14px 18px;background:#1c1c1c;border-bottom:1px solid #2a2a2a;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  input[type=range], input[type=checkbox]{accent-color:#ccf600}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#050505;color:#f0f0e0}
+  header{padding:14px 18px;background:#0c0c0a;border-bottom:1px solid #202020;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
   h1{font-size:17px;margin:0;font-weight:600}
   header label{font-size:13px;display:flex;align-items:center;gap:6px}
   header label[hidden]{display:none}
   .aviso{font-size:12px;color:#f0b429;margin-left:auto}
   main{padding:14px 18px}
-  #drop{border:1px dashed #555;border-radius:6px;padding:4px 10px;font-size:12px;text-align:center;color:#aaa;white-space:nowrap}
-  #drop.over{border-color:#4aa3ff;color:#fff}
+  #drop{border:1px dashed #3a3a36;border-radius:6px;padding:4px 10px;font-size:12px;text-align:center;color:#b0b0b0;white-space:nowrap}
+  #drop.over{border-color:#ccf600;color:#fff}
   #status{color:#ff7b7b;font-size:13px;min-height:1.2em;margin-bottom:6px}
   #info, #maskInfo{margin:0}
   #modeTab .grp.dados{flex:1 1 100%}
   #modeTab #info:empty, #modeTab #maskInfo:empty{display:none}
   .kv{display:flex;flex-wrap:wrap;gap:8px}
-  .kv div{background:#1f1f1f;border:1px solid #2f2f2f;border-radius:8px;padding:6px 10px;min-width:110px}
+  .kv div{background:#111110;border:1px solid #262622;border-radius:8px;padding:6px 10px;min-width:110px}
   .kv b{display:block;color:#888;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
-  .kv span{color:#e6e6e6;font-size:14px;font-variant-numeric:tabular-nums}
-  #maskInfo .kv div{border-color:#5a4a1e;background:#231e10}
-  #maskInfo .kv span{color:#f5d37a}
+  .kv span{color:#f0f0e0;font-size:14px;font-variant-numeric:tabular-nums}
+  #maskInfo .kv div{border-color:#4a5a10;background:#1e210e}
+  #maskInfo .kv span{color:#ccf600}
   .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:12px}
   .controls label{font-size:13px;display:flex;align-items:center;gap:6px}
   .controls input[type=range]{width:140px}
-  select{background:#2a2a2a;color:#eee;border:1px solid #3a3a3a;border-radius:6px;padding:5px 8px;font-size:13px}
-  button{background:#2a2a2a;color:#eee;border:1px solid #3a3a3a;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px}
-  button:hover{background:#333}
-  #cursor{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#9fe39f;min-height:1.2em;margin-bottom:6px}
+  select{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:5px 8px;font-size:13px}
+  button{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px}
+  button:hover{background:#2a2a26}
+  #cursor{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#ccf600;min-height:1.2em;margin-bottom:6px}
   #hint{font-size:12px;color:#777;margin-bottom:12px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
-  .panel{background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:10px}
-  .panel.active{border-color:#4aa3ff}
+  .panel{background:#0c0c0a;border:1px solid #202020;border-radius:10px;padding:10px}
+  .panel.active{border-color:#ccf600}
   .panel.max{grid-column:1 / -1}
   .panel.max canvas{max-height:85vh}
-  .panel h2{font-size:14px;margin:0 0 8px;font-weight:600;color:#ccc}
+  .panel h2{font-size:14px;margin:0 0 8px;font-weight:600;color:#b0b0b0}
   .canvasWrap{background:#000;display:flex;justify-content:center;align-items:center;min-height:220px;overflow:hidden}
   canvas{max-width:100%;max-height:58vh;background:#000;cursor:crosshair;transform-origin:center center}
-  .slicebar{display:flex;align-items:center;gap:8px;font-size:12px;color:#aaa;margin-top:8px}
+  .slicebar{display:flex;align-items:center;gap:8px;font-size:12px;color:#b0b0b0;margin-top:8px}
   .slicebar input{flex:1}
   .slicebar button{padding:4px 8px;font-size:12px}
   /* ---------- Explicações (overlay) ---------- */
-  .tip{display:inline-flex;align-items:center;justify-content:center;position:relative;width:16px;height:16px;border-radius:50%;background:#333;color:#ddd;font-size:11px;cursor:help;margin-left:2px;flex:0 0 auto}
-  .tip::after{content:attr(data-tip);position:absolute;bottom:135%;left:50%;transform:translateX(-50%);width:270px;background:#2b2b2b;color:#eee;border:1px solid #444;padding:8px 10px;border-radius:8px;font-size:12px;line-height:1.4;font-weight:400;text-align:left;white-space:normal;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10}
+  .tip{display:inline-flex;align-items:center;justify-content:center;position:relative;width:16px;height:16px;border-radius:50%;background:#2a2a26;color:#ddd;font-size:11px;cursor:help;margin-left:2px;flex:0 0 auto}
+  .tip::after{content:attr(data-tip);position:absolute;bottom:135%;left:50%;transform:translateX(-50%);width:270px;background:#141410;color:#f0f0e0;border:1px solid #2c2c28;padding:8px 10px;border-radius:8px;font-size:12px;line-height:1.4;font-weight:400;text-align:left;white-space:normal;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10}
   .tip:hover::after,.tip:focus::after{opacity:1}
 
   /* ---------- Aba do modo clínico (canto superior direito) ---------- */
-  #modeTab{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;background:#1c1c1c;border-bottom:1px solid #2a2a2a;padding:8px 18px}
-  #modeTab .grp{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;background:#242424;border:1px solid #3a3a3a;border-radius:8px;padding:6px 10px}
-  #modeTab input[type=file]{max-width:200px;font-size:12px;color:#ccc}
+  #modeTab{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;background:#0c0c0a;border-bottom:1px solid #202020;padding:8px 18px}
+  #modeTab .grp{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;background:#141410;border:1px solid #2c2c28;border-radius:8px;padding:6px 10px}
+  #modeTab input[type=file]{max-width:200px;font-size:12px;color:#b0b0b0}
   #modeTab #drop{white-space:normal;max-width:260px;font-size:12px;padding:6px 10px;line-height:1.3}
   @media (max-width:760px){
     #modeTab{justify-content:flex-start;padding:8px 12px;gap:10px}
@@ -60,18 +61,18 @@
     #modeTab input[type=file]{max-width:100%}
     #modeTab #drop{max-width:none;width:100%}
   }
-  #modeTab button{background:none;border:none;color:#eee;font-size:13px;padding:4px 6px;cursor:pointer}
-  #modeTab button:hover{background:#333;border-radius:4px}
-  #modeTab button.on{color:#4aa3ff;font-weight:600}
+  #modeTab button{background:none;border:none;color:#f0f0e0;font-size:13px;padding:4px 6px;cursor:pointer}
+  #modeTab button:hover{background:#2a2a26;border-radius:4px}
+  #modeTab button.on{color:#ccf600;font-weight:600}
   #modeTab label{font-size:13px;display:flex;align-items:center;gap:6px}
   #modeTab label[hidden]{display:none}
   body:not(.show-tab) #modeTab{display:none}
-  #tabToggle{background:none;border:1px solid #3a3a3a;color:#888;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:14px}
-  #tabToggle:hover{color:#eee;border-color:#555}
+  #tabToggle{background:none;border:1px solid #2c2c28;color:#888;border-radius:6px;padding:2px 8px;cursor:pointer;font-size:14px}
+  #tabToggle:hover{color:#f0f0e0;border-color:#3a3a36}
   .tip.below::after{bottom:auto;top:135%;left:auto;right:0;transform:none}
 
   /* ---------- Modo clínico (teste de usabilidade) ---------- */
-  #clinBar{display:none;background:#1c1c1c;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px}
+  #clinBar{display:none;background:#0c0c0a;border:1px solid #202020;border-radius:10px;padding:14px;margin-bottom:14px}
   body.clinical #clinBar{display:block}
   .cq{font-size:20px;font-weight:600;margin-bottom:12px}
   .cbtns{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
@@ -80,10 +81,18 @@
   .b-nao{background:#2e7d32}
   .b-duv{background:#6b5300}
   .cwin{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-  #clinStatus{font-size:14px;color:#9fe39f;min-height:1.2em;margin-bottom:8px}
+  #clinStatus{font-size:14px;color:#ccf600;min-height:1.2em;margin-bottom:8px}
   .cseg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
   .cseg button{font-size:13px}
-  #segInfo{font-size:14px;color:#f5d37a;min-height:1.2em;margin-bottom:10px}
+  #segInfo{font-size:14px;color:#ccf600;min-height:1.2em;margin-bottom:10px}
+  #mimics{font-size:13px;color:#b0b0b0;margin-bottom:10px}
+  #mimics summary{cursor:pointer;color:#ccf600;margin-bottom:6px}
+  #mimics ul{margin:6px 0 0 18px;padding:0;line-height:1.5}
+  #contra{font-size:13px;color:#b0b0b0;margin-bottom:10px}
+  #contra summary{cursor:pointer;color:#ccf600;margin-bottom:6px}
+  #contra h4{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin:10px 0 4px}
+  #contra ul{margin:0 0 0 18px;padding:0;line-height:1.5}
+  #contra .janela{color:#ccf600;margin:6px 0}
   .legal{font-size:12px;color:#f0b429}
   body.clinical .controls, body.clinical .ctl-row, body.clinical #hint{display:none}
   body.clinical .panel[data-view="C"], body.clinical .panel[data-view="S"]{display:none}
@@ -91,11 +100,11 @@
   body.clinical .panel[data-view="A"] canvas{max-height:78vh}
   /* ---------- Painéis de controle separados ---------- */
   .ctl-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
-  .ctl{border:1px solid #3a3a3a;border-radius:8px;padding:8px 12px 10px;background:#1a1a1a;flex:1 1 auto}
+  .ctl{border:1px solid #2c2c28;border-radius:8px;padding:8px 12px 10px;background:#0f0f0c;flex:1 1 auto}
   .ctl-tit{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:6px}
   .ctl .controls{margin-bottom:0}
-  .ctl.mask{border-color:#5a4a1e;background:#1f1a0e}
-  .ctl.mask .ctl-tit{color:#d9b65a}
+  .ctl.mask{border-color:#4a5a10;background:#1e210e}
+  .ctl.mask .ctl-tit{color:#ccf600}
 
   /* ---------- Balões responsivos (posição decidida pelo espaço disponível) ---------- */
   .tip::after{width:min(270px,calc(100vw - 24px));max-height:50vh;overflow:auto;white-space:normal}
@@ -154,6 +163,46 @@
       <button id="nextSeg">Próxima fatia com segmentação ▶</button>
     </div>
     <div id="segInfo"></div>
+    <details id="mimics" hidden>
+      <summary>Possíveis imitadores de hemorragia (verifique antes de decidir)</summary>
+      <ul>
+        <li>Calcificações fisiológicas e patológicas: plexo corióide, glândula pineal, gânglios da base, calcificações vasculares e da foice.</li>
+        <li>Artefatos de aquisição: endurecimento do feixe na fossa posterior, movimento e artefatos causados por metal, como restaurações dentárias ou implantes.</li>
+        <li>Efeito de volume parcial, próximo à base do crânio e aos seios paranasais.</li>
+        <li>Sinal da artéria cerebral média hiperdensa, que indica trombo e não sangue, mas pode ser confundido com hemorragia.</li>
+        <li>Lesões hiperdensas não hemorrágicas, como meningioma calcificado e algumas metástases ou tumores.</li>
+        <li>Coleções subdurais crônicas e higromas, que podem parecer hemorragia em algumas janelas.</li>
+      </ul>
+    </details>
+    <details id="contra">
+      <summary>Antes de decidir: contraindicações para trombólise</summary>
+      <p class="janela">Janela padrão para trombólise IV: até 4,5 horas do início dos sintomas ou do último momento em que o paciente foi visto bem, com critérios específicos para início desconhecido ou janela estendida por imagem.</p>
+      <h4>Contraindicações absolutas</h4>
+      <ul>
+        <li>Hemorragia intracraniana na TC/RM.</li>
+        <li>Suspeita de hemorragia subaracnóidea, mesmo com TC inicial normal.</li>
+        <li>Pressão arterial &gt; 185/110 mmHg, não controlável com tratamento.</li>
+        <li>Sangramento ativo significativo.</li>
+        <li>Plaquetas &lt; 100.000/mm³.</li>
+        <li>INR &gt; 1,7 ou uso de anticoagulante com efeito relevante (ex.: varfarina).</li>
+        <li>Uso de DOAC (apixabana, rivaroxabana, edoxabana, dabigatrana) nas últimas 48 h, salvo critérios específicos de ausência de efeito anticoagulante.</li>
+        <li>Hipoglicemia ou hiperglicemia grave não corrigida, com quadro que possa mimetizar AVC.</li>
+      </ul>
+      <h4>Contraindicações relativas e situações de alto risco</h4>
+      <ul>
+        <li>Cirurgia intracraniana ou espinhal recente.</li>
+        <li>Trauma cranioencefálico grave recente.</li>
+        <li>AVC isquêmico recente (em geral, nos últimos 3 meses).</li>
+        <li>Sangramento gastrointestinal ou urinário recente.</li>
+        <li>Punção arterial em local não compressível recente.</li>
+        <li>Infarto agudo do miocárdio recente.</li>
+        <li>Suspeita de endocardite infecciosa.</li>
+        <li>Neoplasia intracraniana.</li>
+        <li>Convulsão no início do quadro, se houver dúvida de déficit pós-ictal em vez de AVC.</li>
+        <li>Déficit leve não incapacitante (avaliar benefício individual).</li>
+        <li>Grande área de infarto já estabelecida (avaliar imagem e risco hemorrágico).</li>
+      </ul>
+    </details>
     <div id="clinStatus"></div>
     <div class="legal">Ferramenta de pesquisa. Não use para decisão clínica. A conduta segue sempre o laudo oficial.</div>
   </div>
@@ -252,6 +301,9 @@ const clinBtn = $('clinBtn');
 const clinSegEl = $('clinSeg'), segInfoEl = $('segInfo');
 let segZ = [], segVox = 0;
 const maskLbl = $('maskLbl'), segSwitchEl = $('segSwitch');
+const mimicsEl = $('mimics');
+// Cartões de apoio ficam na tela principal, acima dos cortes
+document.querySelector('.grid').before(mimicsEl, $('contra'));
 let segPresente = false;   // interruptor: o modelo (simulado) segmentou hemorragia
 // Estado da segmentação: 'pronta' | 'processando' | 'indisponivel'
 let segState = {estado: 'indisponivel', motivo: 'nenhuma máscara recebida', fonte: '-'};   // fatias axiais com segmentação e total de voxels acima do limiar       // telas internas com a resolução nativa de cada vista
@@ -449,6 +501,8 @@ function computeSegSlices() {
 
 // Texto da segmentação no modo clínico (oculto quando a opção está desligada)
 function updateSegInfo() {
+  // Imitadores aparecem só quando a IA sinaliza área, em qualquer modo
+  mimicsEl.hidden = !(M && segPresente && segZ.length > 0);
   if (!clinical) { segInfoEl.textContent = ''; return; }
   const s = segState;
   if (s.estado === 'indisponivel') {
@@ -459,19 +513,17 @@ function updateSegInfo() {
     segInfoEl.textContent = 'Segmentação em andamento' + (s.fonte ? ' (' + s.fonte + ')' : '') + '…';
     return;
   }
-  // Pronta: sem revelar presença ou ausência de região enquanto a opção estiver desligada
-  if (!clinSegEl.checked) {
-    segInfoEl.textContent = 'Segmentação pronta, com região oculta neste modo (fonte: ' + s.fonte + ').';
-    return;
-  }
+  // Pronta: a saída da IA aparece sempre; a opção "Mostrar região" só controla o desenho e o volume
   if (!segZ.length) {
-    segInfoEl.textContent = 'Nenhuma região segmentada pelo modelo acima do limiar. (fonte: ' + s.fonte + ')';
+    segInfoEl.textContent = 'A IA não sinalizou área compatível com hemorragia neste exame. Isso não exclui hemorragia: a IA pode ter deixado passar sangramentos pequenos, de borda ou em exames de baixa qualidade. Confirme com o laudo oficial antes de qualquer decisão.';
     return;
   }
   const mm3 = segVox * M.dx * M.dy * M.dz;
-  segInfoEl.textContent = 'Região segmentada em ' + segZ.length + ' fatias (da ' + (segZ[0] + 1) +
-    ' à ' + (segZ[segZ.length - 1] + 1) + ') · ' + fmtNum(mm3) + ' mm³ (' + fmtNum(mm3 / 1000) +
-    ' mL) · fonte: ' + s.fonte;
+  mimicsEl.hidden = false;
+  segInfoEl.textContent = 'A IA sinalizou área compatível com hemorragia. Se confirmada no laudo oficial, é contraindicação absoluta para trombólise. A área pode ser outra estrutura ou um artefato: confirme antes de decidir.';
+  if (clinSegEl.checked) {
+    segInfoEl.textContent += ' Região em ' + segZ.length + ' fatias (da ' + (segZ[0] + 1) + ' à ' + (segZ[segZ.length - 1] + 1) + ') · ' + fmtNum(mm3) + ' mm³ (' + fmtNum(mm3 / 1000) + ' mL)';
+  }
 }
 
 // Ponto de entrada da segmentação: recebe um volume já lido (manual agora; modelo no futuro)
