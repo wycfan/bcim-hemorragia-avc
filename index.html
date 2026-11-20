@@ -91,7 +91,10 @@
   #mimics summary{cursor:pointer;color:#b8d725;margin-bottom:6px}
   #mimics ul{margin:6px 0 0 18px;padding:0;line-height:1.5}
   #limites{font-size:13px;color:#b0b0b0;margin-bottom:10px;padding:8px 12px;background:#141410;border-left:3px solid #f0b429;border-radius:6px}
-  #limites summary{cursor:pointer;color:#f0b429;font-weight:600;margin-bottom:6px}
+  #limites summary{cursor:pointer;color:#f0b429;font-weight:600;margin-bottom:6px;padding:4px 6px;margin-left:-6px;border-radius:4px}
+  #limites summary:hover{background:#1e1e18}
+  #limites summary::after{font-size:12px;font-weight:400;color:#888;white-space:nowrap;margin-left:12px;content:'clique para ver ▾'}
+  #limites[open] summary::after{content:'clique para recolher ▴'}
   #limites p{margin:6px 0}
   #limites h4{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin:10px 0 4px}
   #limites ul{margin:0 0 0 18px;padding:0;line-height:1.5}
