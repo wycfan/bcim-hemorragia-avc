@@ -6,7 +6,7 @@
 <title>Visualizador NIfTI 2D - TC de crânio</title>
 <style>
   *{box-sizing:border-box}
-  input[type=range], input[type=checkbox]{accent-color:#ccf600}
+  input[type=range], input[type=checkbox]{accent-color:#b8d725}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#050505;color:#f0f0e0}
   header{padding:14px 18px;background:#0c0c0a;border-bottom:1px solid #202020;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
   h1{font-size:17px;margin:0;font-weight:600}
@@ -15,7 +15,7 @@
   .aviso{font-size:12px;color:#f0b429;margin-left:auto}
   main{padding:14px 18px}
   #drop{border:1px dashed #3a3a36;border-radius:6px;padding:4px 10px;font-size:12px;text-align:center;color:#b0b0b0;white-space:nowrap}
-  #drop.over{border-color:#ccf600;color:#fff}
+  #drop.over{border-color:#b8d725;color:#fff}
   #status{color:#ff7b7b;font-size:13px;min-height:1.2em;margin-bottom:6px}
   #info, #maskInfo{margin:0}
   #modeTab .grp.dados{flex:1 1 100%}
@@ -25,20 +25,21 @@
   .kv b{display:block;color:#888;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
   .kv span{color:#f0f0e0;font-size:14px;font-variant-numeric:tabular-nums}
   #maskInfo .kv div{border-color:#4a5a10;background:#1e210e}
-  #maskInfo .kv span{color:#ccf600}
+  #maskInfo .kv span{color:#b8d725}
   .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:12px}
   .controls label{font-size:13px;display:flex;align-items:center;gap:6px}
   .controls input[type=range]{width:140px}
   select{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:5px 8px;font-size:13px}
   button{background:#202020;color:#f0f0e0;border:1px solid #2c2c28;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px}
   button:hover{background:#2a2a26}
-  #cursor{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#ccf600;min-height:1.2em;margin-bottom:6px}
+  #cursor{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#b8d725;min-height:1.2em;margin-bottom:6px}
   #hint{font-size:12px;color:#777;margin-bottom:12px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
   .panel{background:#0c0c0a;border:1px solid #202020;border-radius:10px;padding:10px}
-  .panel.active{border-color:#ccf600}
+  .panel.active{border-color:#b8d725}
   .panel.max{grid-column:1 / -1}
-  .panel.max canvas{max-height:85vh}
+  .panel.max .canvasWrap{resize:vertical;height:85vh;min-height:200px}
+  .panel.max canvas{height:100%;width:auto;max-width:100%;max-height:none}
   .panel h2{font-size:14px;margin:0 0 8px;font-weight:600;color:#b0b0b0}
   .canvasWrap{background:#000;display:flex;justify-content:center;align-items:center;min-height:220px;overflow:hidden}
   canvas{max-width:100%;max-height:58vh;background:#000;cursor:crosshair;transform-origin:center center}
@@ -63,7 +64,7 @@
   }
   #modeTab button{background:none;border:none;color:#f0f0e0;font-size:13px;padding:4px 6px;cursor:pointer}
   #modeTab button:hover{background:#2a2a26;border-radius:4px}
-  #modeTab button.on{color:#ccf600;font-weight:600}
+  #modeTab button.on{color:#b8d725;font-weight:600}
   #modeTab label{font-size:13px;display:flex;align-items:center;gap:6px}
   #modeTab label[hidden]{display:none}
   body:not(.show-tab) #modeTab{display:none}
@@ -81,18 +82,18 @@
   .b-nao{background:#2e7d32}
   .b-duv{background:#6b5300}
   .cwin{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-  #clinStatus{font-size:14px;color:#ccf600;min-height:1.2em;margin-bottom:8px}
+  #clinStatus{font-size:14px;color:#b8d725;min-height:1.2em;margin-bottom:8px}
   .cseg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;font-size:13px}
   .cseg button{font-size:13px}
-  #segInfo{font-size:14px;color:#ccf600;min-height:1.2em;margin-bottom:10px}
+  #segInfo{font-size:14px;color:#b8d725;min-height:1.2em;margin-bottom:10px}
   #mimics{font-size:13px;color:#b0b0b0;margin-bottom:10px}
-  #mimics summary{cursor:pointer;color:#ccf600;margin-bottom:6px}
+  #mimics summary{cursor:pointer;color:#b8d725;margin-bottom:6px}
   #mimics ul{margin:6px 0 0 18px;padding:0;line-height:1.5}
   #contra{font-size:13px;color:#b0b0b0;margin-bottom:10px}
-  #contra summary{cursor:pointer;color:#ccf600;margin-bottom:6px}
+  #contra summary{cursor:pointer;color:#b8d725;margin-bottom:6px}
   #contra h4{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#888;margin:10px 0 4px}
   #contra ul{margin:0 0 0 18px;padding:0;line-height:1.5}
-  #contra .janela{color:#ccf600;margin:6px 0}
+  #contra .janela{color:#b8d725;margin:6px 0}
   .legal{font-size:12px;color:#f0b429}
   body.clinical .controls, body.clinical .ctl-row, body.clinical #hint{display:none}
   body.clinical .panel[data-view="C"], body.clinical .panel[data-view="S"]{display:none}
@@ -104,7 +105,7 @@
   .ctl-tit{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:6px}
   .ctl .controls{margin-bottom:0}
   .ctl.mask{border-color:#4a5a10;background:#1e210e}
-  .ctl.mask .ctl-tit{color:#ccf600}
+  .ctl.mask .ctl-tit{color:#b8d725}
 
   /* ---------- Balões responsivos (posição decidida pelo espaço disponível) ---------- */
   .tip::after{width:min(270px,calc(100vw - 24px));max-height:50vh;overflow:auto;white-space:normal}
@@ -837,7 +838,8 @@ for (const k of ['A', 'C', 'S']) {
 
   // Duplo clique alterna a vista entre tamanho normal e ampliado (largura total da página)
   c.addEventListener('dblclick', () => {
-    panels[k].classList.toggle('max');
+    const on = panels[k].classList.toggle('max');
+    if (!on) c.parentElement.style.height = '';   // ao reduzir, volta à altura padrão
     redrawAll();
   });
   c.addEventListener('mouseenter', () => setActive(k));
@@ -850,6 +852,12 @@ for (const k of ['A', 'C', 'S']) {
     if (e.ctrlKey) zoomBy(k, e.deltaY < 0 ? 1.1 : 1 / 1.1);
     else stepSlice(k, e.deltaY > 0 ? 1 : -1);
   }, {passive: false});
+}
+
+// Alça no canto do painel ampliado: ao mudar a altura, o corte é redesenhado na nova resolução
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => { if (V) redrawAll(); });
+  document.querySelectorAll('.canvasWrap').forEach(w => ro.observe(w));
 }
 
 // Teclado: setas e PageUp/PageDown trocam a fatia da vista ativa; +/− e 0 controlam o zoom
